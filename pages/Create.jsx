@@ -1,6 +1,144 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
+
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link", "image"],
+    ["clean"],
+  ],
+};
+
+const formats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+  "clean",
+];
+
+const Create = () => {
+  const [title, setTitle] = useState("");
+  const [summary, setSummary] = useState("");
+  const [content, setContent] = useState("");
+  const [files, setFiles] = useState("");
+  const [author, setAuthor] = useState("");
+  const [category, setCategory] = useState("");
+  const [redirect, setRedirect] = useState(false);
+
+  async function createNewPost(ev) {
+    ev.preventDefault();
+
+    const data = new FormData();
+    data.set("title", title);
+    data.set("summary", summary);
+    data.set("content", content);
+    if (files && files[0]) {
+      data.set("file", files[0]);
+    }
+    data.set("author", author);
+    data.set("category", category);
+
+    try {
+      const response = await fetch("https://back-blog-beta.vercel.app/post", {
+        method: "POST",
+        body: data,
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        setRedirect(true);
+      } else {
+        console.error("Error al crear la noticia:", await response.text());
+      }
+    } catch (err) {
+      console.error("Error de conexión:", err);
+    }
+  }
+
+  if (redirect) {
+    return <Navigate to={"/"} />;
+  }
+
+  return (
+    <>
+      <form
+        className="news"
+        id="news"
+        onSubmit={createNewPost}
+        encType="multipart/form-data"
+      >
+        <input
+          type="text"
+          placeholder="Título"
+          value={title}
+          onChange={(ev) => setTitle(ev.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Resumen"
+          value={summary}
+          onChange={(ev) => setSummary(ev.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Autor"
+          value={author}
+          onChange={(ev) => setAuthor(ev.target.value)}
+          required
+        />
+        <select
+          value={category}
+          onChange={(ev) => setCategory(ev.target.value)}
+          required
+        >
+          <option value="">Selecciona una categoría</option>
+          <option value="Campo">Campo</option>
+          <option value="Ciencia">Ciencia</option>
+          <option value="Tecnología">Tecnología</option>
+          <option value="Finanzas">Finanzas</option>
+        </select>
+        <input
+          type="file"
+          name="file"
+          onChange={(ev) => setFiles(ev.target.files)}
+        />
+        <ReactQuill
+          value={content}
+          modules={modules}
+          formats={formats}
+          onChange={(newValue) => setContent(newValue)}
+        />
+        <button style={{ marginTop: "10px" }}>Crear Noticia</button>
+      </form>
+    </>
+  );
+};
+
+export default Create;
+
+/*
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { useState } from "react";
 import {Navigate} from "react-router-dom";
 
 
@@ -125,3 +263,4 @@ async function createNewPost(ev){
 };
 
 export default Create;
+*/
