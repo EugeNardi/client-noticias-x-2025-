@@ -1,18 +1,22 @@
 import InstagramIcon from '@mui/icons-material/Instagram';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
     <>
     <div className="footer"> 
- 
+
     <div>
         <h1 className="footer-title">Noticias Destacadas</h1>
         <div className="footer-p">
-        <a href="/post/6500fac9d7bb34a707496925">Cybertruck</a>
-        <a href="/post/6500f3406a1e118750d8e417">YPF</a>
-        <a href="/post/6500efa96a1e118750d8e3d1">Steam</a>
+        <Link to="/post/6500fac9d7bb34a707496925">Cybertruck</Link>
+        <Link to="/post/6500f3406a1e118750d8e417">YPF</Link>
+        <Link to="/post/6500efa96a1e118750d8e3d1">Steam</Link>
+        <Link to="/Cargar">Cargar</Link>
+
+        
         </div>
     </div>
     <div>
