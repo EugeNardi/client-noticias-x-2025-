@@ -54,7 +54,7 @@ async function createNewPost(ev){
    data.set("category", category);  
     ev.preventDefault();
 
-  const response =  await fetch('https://back-blog-beta.vercel.app/post', 
+  const response =  await fetch('https://back-blog-beta.vercel.app/post',
     {
       method: 'POST',
       body: data,

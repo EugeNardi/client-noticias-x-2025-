@@ -22,7 +22,7 @@ function App() {
      <Route index element={<Index/>}/>
      <Route path="/login" element={<Login/>}/>
      <Route path="/register" element={<Register/>} />
-     <Route path="/create" element={<Create/>} />
+     <Route path="/Cargar" element={<Create/>} />
      <Route path="/post/:id" element={<PostPage/>}/>
      <Route path="/Campo" element={<Campo/>}/>
      <Route path="/Finanzas" element={<Finanzas/>}/>

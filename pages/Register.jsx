@@ -19,7 +19,7 @@ const Register = () => {
       alert("Registro fallido. Intentalo de Nuevo");
     }else{
         alert("Registro Exitoso");
-        window.location.href="http://localhost:5173/login"
+        window.location.href="https://noticias-x.netlify.app//login"
     }
   }    
   
