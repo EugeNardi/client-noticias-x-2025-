@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import Post from "../components/Post";
 import Footer from "../components/Footer";
+import { API_URL } from "../src/config";
 
 const Index = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch("https://back-blog-beta.vercel.app/post")
+    fetch(`${API_URL}/post`)
       .then((response) => response.json())
       .then((posts) => {
         setPosts(posts.slice(0, 10));

@@ -56,7 +56,7 @@ const Create = () => {
     data.set("category", category);
 
     try {
-      const response = await fetch("https://back-blog-beta.vercel.app/post", {
+      const response = await fetch(`${API_URL}/post`, {
         method: "POST",
         body: data,
         credentials: "include",

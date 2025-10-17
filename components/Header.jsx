@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../src/UserContext";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import { API_URL } from "../src/config";
 
 
 const Header = () => {
   const { setUserInfo, userInfo } = useContext(UserContext);
 
   useEffect(() => {
-    fetch("https://back-blog-beta.vercel.app/profile", {
+    fetch(`${API_URL}/profile`, {
       credentials: "include",
       method: "GET",
     }).then((response) => {
@@ -20,7 +21,7 @@ const Header = () => {
   }, []);
 
   function logout() {
-    fetch("https://back-blog-beta.vercel.app/logout", {
+    fetch(`${API_URL}/logout`, {
       credentials: "include",
       method: "POST",
     });

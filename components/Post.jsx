@@ -1,8 +1,6 @@
-
-
-
 import { formatISO9075 } from "date-fns"
 import {Link} from "react-router-dom"
+import { API_URL } from "../src/config"
 
 const Post = ({_id,title,summary,cover,content,createdAt,author,category}) => {
   return (
@@ -11,7 +9,7 @@ const Post = ({_id,title,summary,cover,content,createdAt,author,category}) => {
     <div className="post">
       <div className="image">
         <Link to={`/post/${_id}`}>
-        <img src={"https://back-blog-beta.vercel.app/"+cover} alt=""/>
+        <img src={`${API_URL}/${cover}`} alt=""/>
         </Link>
       </div>
       <div className="texts">

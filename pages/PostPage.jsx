@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import { formatISO9075 } from "date-fns";
+import { API_URL } from "../src/config";
 
 const PostPage = () => {
   const [postInfo, setPostInfo] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`https://back-blog-beta.vercel.app/post/${id}`)
+    fetch(`${API_URL}/post/${id}`)
       .then((response) => response.json())
       .then((postInfo) => setPostInfo(postInfo));
   }, [id]);
@@ -43,7 +44,7 @@ const PostPage = () => {
           <time>{formatISO9075(new Date(postInfo.createdAt))}</time>
           <div className="author">Por {postInfo.author}</div>
           <div className="image">
-            <img src={`https://back-blog-beta.vercel.app/${postInfo.cover}`} alt="" />
+            <img src={`${API_URL}/${postInfo.cover}`} alt="" />
           </div>
           <div
             className="content"

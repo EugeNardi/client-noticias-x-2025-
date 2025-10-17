@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { API_URL } from "../src/config"
 
 
 const Register = () => {
@@ -8,7 +9,7 @@ const Register = () => {
   async function register(ev){
     ev.preventDefault();
 
-      const response = await fetch("https://back-blog-beta.vercel.app/register", {
+      const response = await fetch(`${API_URL}/register`, {
       method: "POST",
       body: JSON.stringify({username, password}),
       headers: {
@@ -19,7 +20,7 @@ const Register = () => {
       alert("Registro fallido. Intentalo de Nuevo");
     }else{
         alert("Registro Exitoso");
-        window.location.href="https://noticias-x.netlify.app//login"
+        window.location.href="https://noticias-x.com/login"
     }
   }    
   

@@ -1,6 +1,7 @@
 import { useContext, useState } from "react"
 import {Navigate} from "react-router-dom"
 import { UserContext } from "../src/UserContext";
+import { API_URL } from "../src/config";
 
 
 const Login = () => {
@@ -13,7 +14,7 @@ const Login = () => {
 
   async function login(ev) {
     ev.preventDefault();
-    const response = await fetch("https://back-blog-beta.vercel.app/login", {
+    const response = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
