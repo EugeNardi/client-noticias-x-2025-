@@ -1,5 +1,7 @@
 // Configuración centralizada de la API
-export const API_URL = 'https://back-blog-beta.vercel.app';
+// Usa variables de entorno de Vite (VITE_API_URL)
+// Si no existe, usa la URL de producción por defecto
+export const API_URL = import.meta.env.VITE_API_URL || 'https://back-blog-beta.vercel.app';
 
-// Puedes cambiar esta URL según el entorno
-// Para producción con dominio personalizado, usar la URL de Vercel del backend
+// Para desarrollo local: http://localhost:4000
+// Para producción: https://back-blog-beta.vercel.app
