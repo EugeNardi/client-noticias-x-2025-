@@ -8,7 +8,6 @@ const { createClient } = require('@supabase/supabase-js');
 
 // Crear app de Express
 const app = express();
-const router = express.Router();
 
 // Configuración
 const salt = bcrypt.genSaltSync(10);
@@ -30,8 +29,8 @@ const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } 
 
 // ==================== RUTAS ====================
 
-// Ruta raíz
-router.get('/', (req, res) => {
+// Ruta raíz - API Status
+app.get('/', (req, res) => {
   res.json({ 
     message: "API funcionando con Supabase en Netlify", 
     status: "ok",
@@ -40,7 +39,7 @@ router.get('/', (req, res) => {
 });
 
 // 📝 REGISTRO
-router.post('/register', async (req, res) => {
+app.post('/register', async (req, res) => {
   const { username, password } = req.body;
   
   try {
@@ -78,7 +77,7 @@ router.post('/register', async (req, res) => {
 });
 
 // 🔐 LOGIN
-router.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   
   try {
@@ -114,7 +113,7 @@ router.post('/login', async (req, res) => {
 });
 
 // 👤 PERFIL
-router.get('/profile', (req, res) => {
+app.get('/profile', (req, res) => {
   const { token } = req.cookies;
   
   if (!token) {
@@ -130,7 +129,7 @@ router.get('/profile', (req, res) => {
 });
 
 // 🚪 LOGOUT
-router.post('/logout', (req, res) => { 
+app.post('/logout', (req, res) => { 
   res.cookie('token', '', {
     secure: true,
     httpOnly: true,
@@ -140,7 +139,7 @@ router.post('/logout', (req, res) => {
 });
 
 // 📰 CREAR POST (Solo Admin)
-router.post('/post', upload.single('file'), async (req, res) => {
+app.post('/post', upload.single('file'), async (req, res) => {
   try {
     // Verificar autenticación
     const { token } = req.cookies;
@@ -172,7 +171,7 @@ router.post('/post', upload.single('file'), async (req, res) => {
     // Si hay archivo, subirlo a Supabase Storage
     if (req.file) {
       const fileName = `${Date.now()}-${req.file.originalname}`;
-      const { data: uploadData, error: uploadError} = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('covers')
         .upload(fileName, req.file.buffer, {
           contentType: req.file.mimetype
@@ -217,7 +216,7 @@ router.post('/post', upload.single('file'), async (req, res) => {
 });
 
 // 📋 OBTENER TODOS LOS POSTS
-router.get("/post", async (req, res) => {
+app.get("/post", async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('posts')
@@ -230,7 +229,7 @@ router.get("/post", async (req, res) => {
       return res.status(500).json({ error: error.message });
     }
     
-    res.json(data);
+    res.json(data || []);
   } catch (err) {
     console.error('Error en GET /post:', err);
     res.status(500).json({ error: 'Error al obtener las noticias' });
@@ -238,7 +237,7 @@ router.get("/post", async (req, res) => {
 });
 
 // 📄 OBTENER POST POR ID
-router.get('/post/:id', async (req, res) => {
+app.get('/post/:id', async (req, res) => {
   const { id } = req.params;
   
   try {
@@ -260,8 +259,11 @@ router.get('/post/:id', async (req, res) => {
   }
 });
 
-// Montar el router
-app.use('/.netlify/functions/api', router);
+// Exportar como función serverless con base path
+const handler = serverless(app);
 
-// Exportar como función serverless
-module.exports.handler = serverless(app);
+module.exports.handler = async (event, context) => {
+  // Ajustar el path para que funcione con Netlify
+  const result = await handler(event, context);
+  return result;
+};
