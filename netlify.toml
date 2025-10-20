@@ -20,6 +20,7 @@
 [functions]
   # Configuración de las funciones
   node_bundler = "esbuild"
+  external_node_modules = ["@supabase/supabase-js", "bcryptjs", "jsonwebtoken", "express", "serverless-http"]
 
 # Optimización de cache para reducir ancho de banda
 [[headers]]
