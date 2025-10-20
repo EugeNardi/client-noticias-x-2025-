@@ -43,18 +43,46 @@ const Login = () => {
     return  <Navigate to={"/"}/>
   }
   return (
-    <>
-    
-      
-    <form className="login" onSubmit={login}>
-      <h1>Ingresa</h1>
-      <input type="text" placeholder="Nombre de Usuario" value={username} onChange={ev => setUsername(ev.target.value)}/>
-      <input type="password" placeholder="Contraseña" value={password} onChange={ev => setPassword(ev.target.value)}/>
-      <button>Ingresar</button>
-    </form>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1>Bienvenido</h1>
+          <p>Ingresa a tu cuenta</p>
+        </div>
+        
+        <form className="auth-form" onSubmit={login}>
+          <div className="form-group">
+            <label htmlFor="username">Usuario</label>
+            <input 
+              id="username"
+              type="text" 
+              placeholder="Ingresa tu nombre de usuario" 
+              value={username} 
+              onChange={ev => setUsername(ev.target.value)}
+              required
+            />
+          </div>
 
-  
-    </>
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input 
+              id="password"
+              type="password" 
+              placeholder="Ingresa tu contraseña" 
+              value={password} 
+              onChange={ev => setPassword(ev.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="auth-button">Ingresar</button>
+          
+          <div className="auth-footer">
+            <p>¿No tienes cuenta? <a href="/register">Regístrate aquí</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
   )
 }
 

@@ -17,40 +17,59 @@ const Register = () => {
       }
     })
     if(response.status !== 200){
-      alert("Registro fallido. Intentalo de Nuevo");
+      alert("Registro fallido. Inténtalo de nuevo");
     }else{
-        alert("Registro Exitoso");
-        window.location.href="https://noticias-x.com/login"
+        alert("¡Registro exitoso! Ahora puedes iniciar sesión");
+        window.location.href="/login"
     }
   }    
   
   
   return (
-    <>
-   
-      
-        <form className="register"  onSubmit={register}>
-        <input type="checkbox" id="check"/>
-          <h1>Regristrate</h1>
-          <input 
-          type="text" 
-          placeholder="Nombre de Usuario" 
-          value={username}
-          onChange={ev => setUsername(ev.target.value)} 
-          />
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1>Crear Cuenta</h1>
+          <p>Regístrate para comenzar</p>
+        </div>
+        
+        <form className="auth-form" onSubmit={register}>
+          <div className="form-group">
+            <label htmlFor="username">Usuario</label>
+            <input 
+              id="username"
+              type="text" 
+              placeholder="Elige un nombre de usuario" 
+              value={username}
+              onChange={ev => setUsername(ev.target.value)}
+              required
+              minLength={4}
+            />
+            <small>Mínimo 4 caracteres</small>
+          </div>
 
-          <input 
-          type="password" 
-          placeholder="Contraseña" 
-          value={password}
-          onChange={ev => setPassword(ev.target.value)}
-          />
-          <button  className="register">Registrarse</button>
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input 
+              id="password"
+              type="password" 
+              placeholder="Crea una contraseña segura" 
+              value={password}
+              onChange={ev => setPassword(ev.target.value)}
+              required
+              minLength={6}
+            />
+            <small>Mínimo 6 caracteres</small>
+          </div>
 
+          <button type="submit" className="auth-button">Registrarse</button>
+          
+          <div className="auth-footer">
+            <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+          </div>
         </form>
-   
-       
-    </>
+      </div>
+    </div>
   )
 }
 

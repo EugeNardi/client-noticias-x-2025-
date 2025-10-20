@@ -548,3 +548,312 @@ select{
   border: 1px solid#051770;
   height: 30px;
 }
+
+/* ================================================================= */
+/* ESTILOS MEJORADOS PARA LOGIN Y REGISTER - 100% RESPONSIVE */
+/* ================================================================= */
+
+.auth-container {
+  min-height: calc(100vh - 160px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.auth-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #051770;
+  margin: 0 0 10px 0;
+  font-family: "Poppins", sans-serif;
+}
+
+.auth-header p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  font-family: "Roboto", sans-serif;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: "Roboto", sans-serif;
+  background: #f9f9f9;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #051770;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(5, 23, 112, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #999;
+}
+
+.form-group small {
+  font-size: 0.75rem;
+  color: #666;
+  font-family: "Roboto", sans-serif;
+}
+
+.auth-button {
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: #051770;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Roboto", sans-serif;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(5, 23, 112, 0.3);
+}
+
+.auth-button:hover {
+  background: #0a2a9e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(5, 23, 112, 0.4);
+}
+
+.auth-button:active {
+  transform: translateY(0);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.auth-footer p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+.auth-footer a {
+  color: #051770;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.auth-footer a:hover {
+  color: #0a2a9e;
+  text-decoration: underline;
+}
+
+/* ================================================================= */
+/* RESPONSIVE PARA MÓVILES - LOGIN Y REGISTER */
+/* ================================================================= */
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 15px;
+    min-height: calc(100vh - 140px);
+  }
+
+  .auth-card {
+    padding: 25px 20px;
+    border-radius: 12px;
+  }
+
+  .auth-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .auth-header p {
+    font-size: 0.9rem;
+  }
+
+  .form-group input {
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+
+  .auth-button {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+
+  .auth-footer p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-card {
+    padding: 20px 15px;
+  }
+
+  .auth-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .form-group input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ================================================================= */
+/* MEJORAS RESPONSIVE PARA POSTS EN MÓVILES */
+/* ================================================================= */
+
+@media (max-width: 480px) {
+  /* Mejorar alineación de imágenes en posts */
+  div.post .image img {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 0;
+    padding: 0;
+  }
+
+  div.post .texts {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Mejorar espaciado en móviles */
+  main {
+    padding: 10px 5px;
+    max-width: 100%;
+  }
+
+  /* Header responsive */
+  header {
+    height: auto;
+    min-height: 60px;
+    padding: 10px 0;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+    padding: 7px 15px;
+  }
+}
+
+/* ================================================================= */
+/* MEJORAS PARA TABLETS */
+/* ================================================================= */
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .auth-card {
+    max-width: 500px;
+    padding: 35px;
+  }
+
+  div.post {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  div.post .image {
+    width: 100%;
+  }
+
+  div.post .image img {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+}
+
+/* ================================================================= */
+/* MEJORAS GENERALES DE RESPONSIVE */
+/* ================================================================= */
+
+@media (max-width: 768px) {
+  /* Mejorar espaciado general */
+  div.post {
+    padding: 15px 10px;
+    margin-bottom: 20px;
+  }
+
+  /* Títulos más legibles en móvil */
+  div.post .texts h2 {
+    font-size: 1.1rem;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  /* Resumen más compacto */
+  div.post .texts .summary {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  /* Footer responsive */
+  div.footer {
+    flex-direction: column;
+    padding: 20px 10px;
+  }
+
+  div h1.footer-title {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+}
