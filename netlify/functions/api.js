@@ -1,13 +1,8 @@
-const express = require('express');
-const serverless = require('serverless-http');
+const { createClient } = require('@supabase/supabase-js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
-const multer = require('multer');
-const { createClient } = require('@supabase/supabase-js');
-
-// Crear app de Express
-const app = express();
+const cookie = require('cookie');
+const multipart = require('parse-multipart-data');
 
 // Configuración
 const salt = bcrypt.genSaltSync(10);
@@ -15,255 +10,271 @@ const secret = process.env.JWT_SECRET || 'asdfe45we45w345wegw345werjktjwertkjasb
 
 // Supabase client
 const supabase = createClient(
-  process.env.SUPABASE_URL || '',
-  process.env.SUPABASE_ANON_KEY || ''
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
 );
 
-// Middleware
-app.use(express.json());
-app.use(cookieParser());
+// Helper para parsear cookies
+const parseCookies = (cookieHeader) => {
+  if (!cookieHeader) return {};
+  return cookie.parse(cookieHeader);
+};
 
-// Configuración de multer para uploads (en memoria para serverless)
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB max
-
-// ==================== RUTAS ====================
-
-// Ruta raíz - API Status
-app.get('/', (req, res) => {
-  res.json({ 
-    message: "API funcionando con Supabase en Netlify", 
-    status: "ok",
-    timestamp: new Date().toISOString()
-  });
-});
-
-// 📝 REGISTRO
-app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+// Helper para respuestas
+const response = (statusCode, body, cookies = null) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Credentials': 'true'
+  };
   
-  try {
-    // Verificar si el usuario ya existe
-    const { data: existingUser } = await supabase
-      .from('users')
-      .select('username')
-      .eq('username', username)
-      .single();
-    
-    if (existingUser) {
-      return res.status(400).json({ error: 'El usuario ya existe' });
-    }
-    
-    // Hashear la contraseña
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    
-    // Crear el usuario
-    const { data, error } = await supabase
-      .from('users')
-      .insert([{ username, password: hashedPassword }])
-      .select()
-      .single();
-    
-    if (error) {
-      console.error('Error al crear usuario:', error);
-      return res.status(400).json({ error: error.message });
-    }
-    
-    res.json({ id: data.id, username: data.username });
-  } catch (e) {
-    console.error('Error en registro:', e);
-    res.status(500).json({ error: 'Error interno del servidor' });
+  if (cookies) {
+    headers['Set-Cookie'] = cookies;
   }
-});
+  
+  return {
+    statusCode,
+    headers,
+    body: JSON.stringify(body)
+  };
+};
 
-// 🔐 LOGIN
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+exports.handler = async (event, context) => {
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return response(200, {});
+  }
+
+  const path = event.path.replace('/.netlify/functions/api', '');
+  const method = event.httpMethod;
   
   try {
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('username', username)
-      .single();
+    // ==================== RUTAS ====================
     
-    if (error || !user) {
-      return res.status(400).json({ error: 'Usuario o contraseña incorrecta' });
+    // GET / - Status
+    if (path === '' || path === '/') {
+      return response(200, {
+        message: "API funcionando con Supabase en Netlify",
+        status: "ok",
+        timestamp: new Date().toISOString()
+      });
     }
     
-    const passOk = bcrypt.compareSync(password, user.password);
+    // POST /register
+    if (path === '/register' && method === 'POST') {
+      const { username, password } = JSON.parse(event.body);
+      
+      // Verificar si existe
+      const { data: existingUser } = await supabase
+        .from('users')
+        .select('username')
+        .eq('username', username)
+        .single();
+      
+      if (existingUser) {
+        return response(400, { error: 'El usuario ya existe' });
+      }
+      
+      // Crear usuario
+      const hashedPassword = bcrypt.hashSync(password, salt);
+      const { data, error } = await supabase
+        .from('users')
+        .insert([{ username, password: hashedPassword }])
+        .select()
+        .single();
+      
+      if (error) {
+        return response(400, { error: error.message });
+      }
+      
+      return response(200, { id: data.id, username: data.username });
+    }
     
-    if (passOk) {
-      jwt.sign({ username, id: user.id }, secret, {}, (err, token) => {
-        if (err) throw err;
-        res.cookie('token', token, { 
-          secure: true, 
+    // POST /login
+    if (path === '/login' && method === 'POST') {
+      const { username, password } = JSON.parse(event.body);
+      
+      const { data: user, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('username', username)
+        .single();
+      
+      if (error || !user) {
+        return response(400, { error: 'Usuario o contraseña incorrecta' });
+      }
+      
+      const passOk = bcrypt.compareSync(password, user.password);
+      
+      if (passOk) {
+        const token = jwt.sign({ username, id: user.id }, secret);
+        const cookieValue = cookie.serialize('token', token, {
+          secure: true,
           httpOnly: true,
           sameSite: 'none',
-          maxAge: 24 * 60 * 60 * 1000
-        }).json({ id: user.id, username });
-      });
-    } else {
-      res.status(400).json({ error: 'Usuario o contraseña incorrecta' });
-    }
-  } catch (e) {
-    console.error('Error en login:', e);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
-
-// 👤 PERFIL
-app.get('/profile', (req, res) => {
-  const { token } = req.cookies;
-  
-  if (!token) {
-    return res.status(401).json({ error: 'Token no proporcionado' });
-  }
-
-  jwt.verify(token, secret, (err, info) => {
-    if (err) {
-      return res.status(401).json({ error: 'Token inválido o expirado' });
-    } 
-    res.json(info);
-  });
-});
-
-// 🚪 LOGOUT
-app.post('/logout', (req, res) => { 
-  res.cookie('token', '', {
-    secure: true,
-    httpOnly: true,
-    sameSite: 'none',
-    maxAge: 0
-  }).json('ok');
-});
-
-// 📰 CREAR POST (Solo Admin)
-app.post('/post', upload.single('file'), async (req, res) => {
-  try {
-    // Verificar autenticación
-    const { token } = req.cookies;
-    if (!token) {
-      return res.status(401).json({ error: 'No autorizado - Token requerido' });
-    }
-
-    // Verificar token y obtener usuario
-    let userInfo;
-    try {
-      userInfo = jwt.verify(token, secret);
-    } catch (err) {
-      return res.status(401).json({ error: 'Token inválido' });
-    }
-
-    // Verificar que el usuario sea admin
-    const { data: user, error: userError } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', userInfo.id)
-      .single();
-
-    if (userError || !user || user.role !== 'admin') {
-      return res.status(403).json({ error: 'Acceso denegado - Solo administradores pueden crear noticias' });
-    }
-
-    let coverUrl = null;
-
-    // Si hay archivo, subirlo a Supabase Storage
-    if (req.file) {
-      const fileName = `${Date.now()}-${req.file.originalname}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('covers')
-        .upload(fileName, req.file.buffer, {
-          contentType: req.file.mimetype
+          maxAge: 24 * 60 * 60,
+          path: '/'
         });
-
-      if (uploadError) {
-        console.error('Error al subir imagen:', uploadError);
+        
+        return response(200, { id: user.id, username }, cookieValue);
       } else {
-        // Obtener URL pública
-        const { data: { publicUrl } } = supabase.storage
-          .from('covers')
-          .getPublicUrl(fileName);
-        coverUrl = publicUrl;
+        return response(400, { error: 'Usuario o contraseña incorrecta' });
       }
     }
-
-    const { title, summary, content, author, category } = req.body;
-
-    const { data, error } = await supabase
-      .from('posts')
-      .insert([{
-        title,
-        summary,
-        content,
-        cover: coverUrl,
-        author,
-        category,
-      }])
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error al crear post:', error);
-      return res.status(500).json({ error: error.message });
-    }
-
-    res.json(data);
-  } catch (err) {
-    console.error('Error en POST /post:', err);
-    res.status(500).json({ error: 'Error al crear la noticia' });
-  }
-});
-
-// 📋 OBTENER TODOS LOS POSTS
-app.get("/post", async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from('posts')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(50);
     
-    if (error) {
-      console.error('Error al obtener posts:', error);
-      return res.status(500).json({ error: error.message });
+    // GET /profile
+    if (path === '/profile' && method === 'GET') {
+      const cookies = parseCookies(event.headers.cookie);
+      const token = cookies.token;
+      
+      if (!token) {
+        return response(401, { error: 'Token no proporcionado' });
+      }
+      
+      try {
+        const info = jwt.verify(token, secret);
+        return response(200, info);
+      } catch (err) {
+        return response(401, { error: 'Token inválido o expirado' });
+      }
     }
     
-    res.json(data || []);
-  } catch (err) {
-    console.error('Error en GET /post:', err);
-    res.status(500).json({ error: 'Error al obtener las noticias' });
-  }
-});
-
-// 📄 OBTENER POST POR ID
-app.get('/post/:id', async (req, res) => {
-  const { id } = req.params;
-  
-  try {
-    const { data, error } = await supabase
-      .from('posts')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    if (error) {
-      console.error('Error al obtener post:', error);
-      return res.status(404).json({ error: 'Post no encontrado' });
+    // POST /logout
+    if (path === '/logout' && method === 'POST') {
+      const cookieValue = cookie.serialize('token', '', {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: 0,
+        path: '/'
+      });
+      
+      return response(200, 'ok', cookieValue);
     }
     
-    res.json(data);
-  } catch (err) {
-    console.error('Error en GET /post/:id:', err);
-    res.status(500).json({ error: 'Error al obtener la noticia' });
+    // GET /post - Obtener todos los posts
+    if (path === '/post' && method === 'GET') {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      
+      if (error) {
+        return response(500, { error: error.message });
+      }
+      
+      return response(200, data || []);
+    }
+    
+    // GET /post/:id - Obtener post por ID
+    if (path.startsWith('/post/') && method === 'GET') {
+      const id = path.split('/')[2];
+      
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (error) {
+        return response(404, { error: 'Post no encontrado' });
+      }
+      
+      return response(200, data);
+    }
+    
+    // POST /post - Crear post (solo admin)
+    if (path === '/post' && method === 'POST') {
+      const cookies = parseCookies(event.headers.cookie);
+      const token = cookies.token;
+      
+      if (!token) {
+        return response(401, { error: 'No autorizado - Token requerido' });
+      }
+      
+      let userInfo;
+      try {
+        userInfo = jwt.verify(token, secret);
+      } catch (err) {
+        return response(401, { error: 'Token inválido' });
+      }
+      
+      // Verificar que sea admin
+      const { data: user, error: userError } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', userInfo.id)
+        .single();
+      
+      if (userError || !user || user.role !== 'admin') {
+        return response(403, { error: 'Acceso denegado - Solo administradores' });
+      }
+      
+      // Parsear multipart form data si hay archivo
+      let coverUrl = null;
+      let formData = {};
+      
+      const contentType = event.headers['content-type'] || event.headers['Content-Type'];
+      
+      if (contentType && contentType.includes('multipart/form-data')) {
+        const boundary = contentType.split('boundary=')[1];
+        const parts = multipart.parse(Buffer.from(event.body, 'base64'), boundary);
+        
+        for (const part of parts) {
+          if (part.filename) {
+            // Es un archivo
+            const fileName = `${Date.now()}-${part.filename}`;
+            const { error: uploadError } = await supabase.storage
+              .from('covers')
+              .upload(fileName, part.data, {
+                contentType: part.type
+              });
+            
+            if (!uploadError) {
+              const { data: { publicUrl } } = supabase.storage
+                .from('covers')
+                .getPublicUrl(fileName);
+              coverUrl = publicUrl;
+            }
+          } else {
+            // Es un campo de texto
+            formData[part.name] = part.data.toString();
+          }
+        }
+      } else {
+        formData = JSON.parse(event.body);
+      }
+      
+      const { title, summary, content, author, category } = formData;
+      
+      const { data, error } = await supabase
+        .from('posts')
+        .insert([{
+          title,
+          summary,
+          content,
+          cover: coverUrl,
+          author,
+          category
+        }])
+        .select()
+        .single();
+      
+      if (error) {
+        return response(500, { error: error.message });
+      }
+      
+      return response(200, data);
+    }
+    
+    // Ruta no encontrada
+    return response(404, { error: 'Ruta no encontrada' });
+    
+  } catch (error) {
+    console.error('Error:', error);
+    return response(500, { error: 'Error interno del servidor', details: error.message });
   }
-});
-
-// Exportar como función serverless con base path
-const handler = serverless(app);
-
-module.exports.handler = async (event, context) => {
-  // Ajustar el path para que funcione con Netlify
-  const result = await handler(event, context);
-  return result;
 };
