@@ -1,25 +1,24 @@
 import { formatISO9075 } from "date-fns"
 import {Link} from "react-router-dom"
-import { API_URL } from "../src/config"
 
-const Post = ({_id,title,summary,cover,content,createdAt,author,category}) => {
+const Post = ({id,title,summary,cover,content,created_at,author,category}) => {
   return (
     <>
     <main>
     <div className="post">
       <div className="image">
-        <Link to={`/post/${_id}`}>
-        <img src={`${API_URL}/${cover}`} alt=""/>
+        <Link to={`/post/${id}`}>
+        <img src={cover} alt=""/>
         </Link>
       </div>
       <div className="texts">
       <div className="class"><a href="#">{category}</a></div>
-        <Link to={`/post/${_id}`}>
+        <Link to={`/post/${id}`}>
         <h2>{title}</h2>
         </Link>
         <p className="info">
           <a href="#" className="author">{author}</a>
-          <time>{formatISO9075(new Date(createdAt))}</time>
+          <time>{created_at ? formatISO9075(new Date(created_at)) : ''}</time>
         </p>
        <p className="summary">{summary}</p>
       </div>
