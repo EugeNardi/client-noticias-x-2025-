@@ -6,9 +6,11 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const { createClient } = require('@supabase/supabase-js');
 
-// Configuración
+// Crear app de Express
 const app = express();
 const router = express.Router();
+
+// Configuración
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.JWT_SECRET || 'asdfe45we45w345wegw345werjktjwertkjasbfoafnqwojfbqwijfm13rboj12ren1oinoqwndipw';
 
@@ -24,10 +26,11 @@ app.use(cookieParser());
 
 // Configuración de multer para uploads (en memoria para serverless)
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB max
 
 // ==================== RUTAS ====================
 
+// Ruta raíz
 router.get('/', (req, res) => {
   res.json({ 
     message: "API funcionando con Supabase en Netlify", 
@@ -169,7 +172,7 @@ router.post('/post', upload.single('file'), async (req, res) => {
     // Si hay archivo, subirlo a Supabase Storage
     if (req.file) {
       const fileName = `${Date.now()}-${req.file.originalname}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError} = await supabase.storage
         .from('covers')
         .upload(fileName, req.file.buffer, {
           contentType: req.file.mimetype
@@ -257,7 +260,7 @@ router.get('/post/:id', async (req, res) => {
   }
 });
 
-// Montar el router en /api
+// Montar el router
 app.use('/.netlify/functions/api', router);
 
 // Exportar como función serverless
