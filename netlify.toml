@@ -20,7 +20,7 @@
 
 [build.environment]
   # URL de la API - ahora usa Netlify Functions
-  VITE_API_URL = "/.netlify/functions/api"
+  VITE_API_URL = "/api"
 
 [functions]
   # Configuración de las funciones
