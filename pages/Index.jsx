@@ -17,18 +17,25 @@ const Index = () => {
     setLoading(true);
     const { data, error } = await supabase
       .from('posts')
-      .select('*')
+      .select('id, title, summary, content, cover, author, category, created_at')
       .order('created_at', { ascending: false });
     
     if (error) {
       console.error('Error al cargar noticias:', error);
       setAllPosts([]);
     } else {
-      // Eliminar duplicados basándose en el ID
-      const uniquePosts = data.filter((post, index, self) =>
-        index === self.findIndex((p) => p.id === post.id)
-      );
-      setAllPosts(uniquePosts || []);
+      // Eliminar duplicados estrictos basándose en el ID
+      const seen = new Set();
+      const uniquePosts = (data || []).filter(post => {
+        if (seen.has(post.id)) {
+          return false;
+        }
+        seen.add(post.id);
+        return true;
+      });
+      
+      console.log('Noticias únicas cargadas:', uniquePosts.length);
+      setAllPosts(uniquePosts);
     }
     setLoading(false);
   };
@@ -84,27 +91,29 @@ const Index = () => {
             )}
           </main>
 
-          {/* Paginación Simple y Elegante */}
+          {/* Paginación Sutil con Flechas */}
           {totalPages > 1 && (
-            <div className="pagination-simple">
+            <div className="pagination-subtle">
               <button
                 onClick={() => paginate(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="page-btn"
+                className="arrow-btn"
+                aria-label="Página anterior"
               >
-                ← Anterior
+                ←
               </button>
 
-              <div className="page-info">
-                Página <strong>{currentPage}</strong> de <strong>{totalPages}</strong>
-              </div>
+              <span className="page-indicator">
+                {currentPage} / {totalPages}
+              </span>
 
               <button
                 onClick={() => paginate(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="page-btn"
+                className="arrow-btn"
+                aria-label="Página siguiente"
               >
-                Siguiente →
+                →
               </button>
             </div>
           )}
