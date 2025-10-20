@@ -333,19 +333,23 @@ header form button:hover::after{
     position: fixed;
     top: 80px;
     left: 0;
-    background: linear-gradient(180deg, #051770 0%, #0a2a9e 100%);
+    right: 0;
+    background: white;
     width: 100%;
-    height: auto;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, box-shadow 0.4s ease;
-    box-shadow: none;
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+    box-shadow: 0 5px 20px rgba(5, 23, 112, 0.1);
     z-index: 999;
+    border-bottom: 2px solid #051770;
   }
 
   #check:checked ~ nav {
-    max-height: 500px;
-    box-shadow: 0 10px 30px rgba(5, 23, 112, 0.3);
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    box-shadow: 0 10px 30px rgba(5, 23, 112, 0.2);
   }
 
   #check:checked~.icons #menu-icon{
@@ -369,69 +373,94 @@ header form button:hover::after{
   }
 
   /* Links del menú móvil */
-  header nav a{
+  header nav a.nav-link{
     display: block;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     margin: 0;
     text-align: left;
-    color: white;
+    color: #051770;
     text-decoration: none;
-    padding: 16px 30px;
+    padding: 18px 25px;
     transition: all 0.3s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid #e8e8e8;
     position: relative;
+    font-weight: 600;
   }
 
-  header nav a::before {
+  header nav a.nav-link::before {
     content: '';
     position: absolute;
     left: 0;
     top: 0;
     height: 100%;
     width: 4px;
-    background: white;
+    background: #051770;
     transform: scaleY(0);
     transition: transform 0.3s ease;
   }
 
-  header nav a:hover::before {
+  header nav a.nav-link:hover::before {
     transform: scaleY(1);
   }
 
-  header nav a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    padding-left: 40px;
+  header nav a.nav-link:hover {
+    background: #f8f9fa;
+    padding-left: 35px;
   }
 
-  /* Botones especiales en el menú */
+  /* Botón Crear Noticia en móvil */
   header nav a.crear-noticia-btn {
-    background: rgba(255, 255, 255, 0.15);
-    margin: 10px 15px;
-    border-radius: 8px;
+    background: #051770;
+    color: white;
+    margin: 15px;
+    border-radius: 10px;
     border-bottom: none;
+    text-align: center;
+    padding: 14px 20px;
+    font-weight: 700;
   }
 
   header nav a.crear-noticia-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: #0a2a9e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(5, 23, 112, 0.3);
   }
 
+  header nav a.crear-noticia-btn::before {
+    display: none;
+  }
+
+  /* Username display en móvil */
   header nav .username-display {
-    background: rgba(255, 255, 255, 0.2);
-    margin: 10px 15px;
-    border-radius: 8px;
+    background: #f0f0f0;
+    color: #051770;
+    margin: 15px;
+    border-radius: 10px;
+    padding: 12px 20px;
+    text-align: center;
+    font-weight: 600;
   }
 
+  /* Botones Login/Register en móvil */
   header nav a.login-btn {
-    background: transparent;
-    border: 2px solid white;
+    background: white;
+    color: #051770;
+    border: 2px solid #051770;
     margin: 10px 15px;
-    border-radius: 8px;
+    border-radius: 10px;
     text-align: center;
+    padding: 12px 20px;
+    font-weight: 700;
   }
 
   header nav a.login-btn:hover {
-    background: white;
-    color: #051770;
+    background: #051770;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  header nav a.login-btn::before {
+    display: none;
   }
 
   #check:checked~.navbar { 
