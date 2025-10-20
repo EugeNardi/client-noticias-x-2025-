@@ -859,32 +859,40 @@ select{
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/* MEJORAS DE DISEÑO MODERNO Y RESPONSIVE CON ESPACIOS PARA ADSENSE */
+/* DISEÑO PROFESIONAL ELEGANTE - ESTILO PERIÓDICO DE GRAN MARCA */
 /* ═══════════════════════════════════════════════════════════════════ */
+
+/* Fondo general */
+body {
+  background: #f8f9fa;
+}
 
 /* Contenedor principal mejorado */
 main {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px 15px;
+  padding: 30px 20px;
 }
 
-/* Grid de posts mejorado */
+/* Grid de posts - Diseño elegante sin cuadros */
 div.post {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 25px;
-  margin-bottom: 30px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  grid-template-columns: 350px 1fr;
+  gap: 30px;
+  margin-bottom: 40px;
+  padding: 0;
+  background: transparent;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 40px;
+  transition: all 0.3s ease;
 }
 
 div.post:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  border-bottom-color: #051770;
+}
+
+div.post:last-child {
+  border-bottom: none;
 }
 
 /* Imágenes mejoradas */
@@ -1171,5 +1179,407 @@ div.post .texts .class a:hover {
   .post-page img {
     max-height: 300px;
     border-radius: 8px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* PÁGINA DE DETALLE DE NOTICIA - DISEÑO PROFESIONAL */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.post-page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 60px;
+}
+
+.post-page-content {
+  max-width: 900px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.breadcrumb a {
+  color: #051770;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+  color: #0a2a9e;
+  text-decoration: underline;
+}
+
+.breadcrumb span {
+  color: #999;
+}
+
+/* Badge de categoría */
+.post-category-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: #051770;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Título del post */
+.post-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #1a1a1a;
+  margin: 0 0 25px 0;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: -0.5px;
+}
+
+/* Metadata */
+.post-metadata {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  padding: 20px 0;
+  border-top: 2px solid #e0e0e0;
+  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 30px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.post-author,
+.post-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.post-author svg,
+.post-date svg {
+  color: #051770;
+}
+
+/* Resumen */
+.post-summary {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: #333;
+  font-weight: 400;
+  margin-bottom: 35px;
+  padding: 25px;
+  background: #f8f9fa;
+  border-left: 4px solid #051770;
+  font-family: 'Roboto', sans-serif;
+  font-style: italic;
+}
+
+/* Imagen principal */
+.post-image-container {
+  margin: 40px 0;
+  overflow: hidden;
+}
+
+.post-image {
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Contenido del artículo */
+.post-content {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: #2c2c2c;
+  font-family: 'Roboto', sans-serif;
+}
+
+.post-content p {
+  margin-bottom: 25px;
+}
+
+.post-content h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 40px 0 20px 0;
+  color: #1a1a1a;
+  font-family: 'Poppins', sans-serif;
+}
+
+.post-content h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 30px 0 15px 0;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+}
+
+.post-content ul,
+.post-content ol {
+  margin: 20px 0;
+  padding-left: 30px;
+}
+
+.post-content li {
+  margin-bottom: 10px;
+}
+
+.post-content blockquote {
+  margin: 30px 0;
+  padding: 20px 30px;
+  background: #f8f9fa;
+  border-left: 4px solid #051770;
+  font-style: italic;
+  color: #555;
+}
+
+/* Compartir en redes */
+.post-share {
+  margin: 50px 0;
+  padding: 30px 0;
+  border-top: 2px solid #e0e0e0;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.post-share h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+}
+
+.share-btn.twitter {
+  background: #1DA1F2;
+  color: white;
+}
+
+.share-btn.twitter:hover {
+  background: #1a8cd8;
+  transform: translateY(-2px);
+}
+
+.share-btn.facebook {
+  background: #4267B2;
+  color: white;
+}
+
+.share-btn.facebook:hover {
+  background: #365899;
+  transform: translateY(-2px);
+}
+
+.share-btn.whatsapp {
+  background: #25D366;
+  color: white;
+}
+
+.share-btn.whatsapp:hover {
+  background: #20ba5a;
+  transform: translateY(-2px);
+}
+
+/* Noticias relacionadas */
+.related-posts {
+  margin-top: 60px;
+}
+
+.related-posts h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #1a1a1a;
+  font-family: 'Poppins', sans-serif;
+}
+
+.related-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.related-post-card {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 15px;
+}
+
+.related-post-card:hover {
+  transform: translateY(-5px);
+}
+
+.related-post-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.related-post-content {
+  padding: 0;
+}
+
+.related-post-category {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #051770;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.related-post-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 10px 0;
+  color: #1a1a1a;
+  font-family: 'Poppins', sans-serif;
+}
+
+.related-post-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #666;
+  margin: 0;
+}
+
+/* Sidebar */
+.post-sidebar {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #051770;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* RESPONSIVE PARA PÁGINA DE DETALLE */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .post-page-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .post-sidebar {
+    display: none;
+  }
+
+  .related-posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .post-page-container {
+    padding: 20px 15px;
+  }
+
+  .post-title {
+    font-size: 2rem;
+  }
+
+  .post-summary {
+    font-size: 1.1rem;
+    padding: 20px 15px;
+  }
+
+  .post-content {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .post-metadata {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .related-posts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .share-buttons {
+    flex-direction: column;
+  }
+
+  .share-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .post-title {
+    font-size: 1.6rem;
+  }
+
+  .post-image {
+    max-height: 300px;
+  }
+
+  .breadcrumb {
+    font-size: 0.75rem;
   }
 }
