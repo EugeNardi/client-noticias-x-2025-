@@ -34,8 +34,15 @@ const Index = () => {
         return true;
       });
       
-      console.log('Noticias únicas cargadas:', uniquePosts.length);
-      setAllPosts(uniquePosts);
+      // Filtrar noticias que tengan imagen válida
+      const postsWithImages = uniquePosts.filter(post => {
+        return post.cover && 
+               post.cover.trim() !== '' && 
+               (post.cover.startsWith('http://') || post.cover.startsWith('https://'));
+      });
+      
+      console.log('Noticias únicas con imágenes:', postsWithImages.length);
+      setAllPosts(postsWithImages);
     }
     setLoading(false);
   };

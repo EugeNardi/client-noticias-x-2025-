@@ -17,7 +17,11 @@ const Campo = () => {
       if (error) {
         console.error('Error al cargar noticias:', error);
       } else {
-        setPosts(data || []);
+        const postsWithImages = (data || []).filter(post => {
+          return post.cover && post.cover.trim() !== '' && 
+                 (post.cover.startsWith('http://') || post.cover.startsWith('https://'));
+        });
+        setPosts(postsWithImages);
       }
     };
     

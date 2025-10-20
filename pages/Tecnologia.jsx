@@ -17,7 +17,13 @@ const Tecnologia = () => {
       if (error) {
         console.error('Error al cargar noticias:', error);
       } else {
-        setPosts(data || []);
+        // Filtrar solo noticias con imagen válida
+        const postsWithImages = (data || []).filter(post => {
+          return post.cover && 
+                 post.cover.trim() !== '' && 
+                 (post.cover.startsWith('http://') || post.cover.startsWith('https://'));
+        });
+        setPosts(postsWithImages);
       }
     };
     
