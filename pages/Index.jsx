@@ -6,7 +6,6 @@ import { supabase } from "../src/supabaseClient";
 const Index = () => {
   const [allPosts, setAllPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const postsPerPage = 6;
 
@@ -16,16 +15,20 @@ const Index = () => {
 
   const fetchAllPosts = async () => {
     setLoading(true);
-    const { data, error, count } = await supabase
+    const { data, error } = await supabase
       .from('posts')
-      .select('*', { count: 'exact' })
+      .select('*')
       .order('created_at', { ascending: false });
     
     if (error) {
       console.error('Error al cargar noticias:', error);
+      setAllPosts([]);
     } else {
-      setAllPosts(data || []);
-      setTotalPages(Math.ceil((count || data.length) / postsPerPage));
+      // Eliminar duplicados basándose en el ID
+      const uniquePosts = data.filter((post, index, self) =>
+        index === self.findIndex((p) => p.id === post.id)
+      );
+      setAllPosts(uniquePosts || []);
     }
     setLoading(false);
   };
@@ -34,47 +37,12 @@ const Index = () => {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = allPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(allPosts.length / postsPerPage);
 
   // Cambiar de página
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Generar números de página
-  const getPageNumbers = () => {
-    const pageNumbers = [];
-    const maxPagesToShow = 5;
-    
-    if (totalPages <= maxPagesToShow) {
-      for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) {
-          pageNumbers.push(i);
-        }
-        pageNumbers.push('...');
-        pageNumbers.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pageNumbers.push(1);
-        pageNumbers.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) {
-          pageNumbers.push(i);
-        }
-      } else {
-        pageNumbers.push(1);
-        pageNumbers.push('...');
-        pageNumbers.push(currentPage - 1);
-        pageNumbers.push(currentPage);
-        pageNumbers.push(currentPage + 1);
-        pageNumbers.push('...');
-        pageNumbers.push(totalPages);
-      }
-    }
-    
-    return pageNumbers;
   };
 
   if (loading) {
@@ -90,11 +58,13 @@ const Index = () => {
     <>
       <div className="index-container">
         <div className="index-content">
-          {/* Header de archivo */}
+          {/* Header del archivo */}
           <div className="archive-header">
-            <h1>Todas las Noticias</h1>
+            <h1>Últimas Noticias</h1>
             <p className="archive-info">
-              Mostrando {indexOfFirstPost + 1} - {Math.min(indexOfLastPost, allPosts.length)} de {allPosts.length} noticias
+              {allPosts.length > 0 
+                ? `${allPosts.length} ${allPosts.length === 1 ? 'noticia' : 'noticias'} publicadas`
+                : 'No hay noticias disponibles'}
             </p>
           </div>
 
@@ -106,53 +76,35 @@ const Index = () => {
               ))
             ) : (
               <div className="no-posts">
-                <p>No hay noticias disponibles</p>
+                <p>No hay noticias para mostrar</p>
+                <p style={{fontSize: '0.9rem', color: '#999', marginTop: '10px'}}>
+                  Ejecuta el script SQL para agregar noticias de ejemplo
+                </p>
               </div>
             )}
           </main>
 
-          {/* Paginación */}
+          {/* Paginación Simple y Elegante */}
           {totalPages > 1 && (
-            <div className="pagination">
-              {/* Botón Anterior */}
+            <div className="pagination-simple">
               <button
                 onClick={() => paginate(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="pagination-btn pagination-prev"
+                className="page-btn"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M15 18l-6-6 6-6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                Anterior
+                ← Anterior
               </button>
 
-              {/* Números de página */}
-              <div className="pagination-numbers">
-                {getPageNumbers().map((number, index) => (
-                  number === '...' ? (
-                    <span key={`ellipsis-${index}`} className="pagination-ellipsis">...</span>
-                  ) : (
-                    <button
-                      key={number}
-                      onClick={() => paginate(number)}
-                      className={`pagination-number ${currentPage === number ? 'active' : ''}`}
-                    >
-                      {number}
-                    </button>
-                  )
-                ))}
+              <div className="page-info">
+                Página <strong>{currentPage}</strong> de <strong>{totalPages}</strong>
               </div>
 
-              {/* Botón Siguiente */}
               <button
                 onClick={() => paginate(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="pagination-btn pagination-next"
+                className="page-btn"
               >
-                Siguiente
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M9 18l6-6-6-6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                Siguiente →
               </button>
             </div>
           )}
@@ -161,7 +113,9 @@ const Index = () => {
         {/* Sidebar para anuncios */}
         <aside className="index-sidebar">
           <div className="ad-container-sidebar">
-            <p style={{color: '#999', fontSize: '0.85rem', textAlign: 'center'}}>Publicidad</p>
+            <p style={{color: '#999', fontSize: '0.85rem', textAlign: 'center', marginBottom: '15px'}}>
+              Publicidad
+            </p>
             {/* Aquí irá el código de AdSense */}
           </div>
         </aside>
