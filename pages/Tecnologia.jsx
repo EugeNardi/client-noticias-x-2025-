@@ -1,20 +1,27 @@
 import { useEffect, useState } from "react";
 import Post from "../components/Post";
 import Footer from "../components/Footer";
-import { API_URL } from "../src/config";
+import { supabase } from "../src/supabaseClient";
 
 const Tecnologia = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/post`)
-      .then((response) => response.json())
-      .then((posts) => {
-        const categoryPosts = posts.filter(
-          (post) => post.category === "Tecnología"
-        );
-        setPosts(categoryPosts);
-      });
+    const fetchPosts = async () => {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('category', 'Tecnología')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error al cargar noticias:', error);
+      } else {
+        setPosts(data || []);
+      }
+    };
+    
+    fetchPosts();
   }, []);
 
   useEffect(() => {

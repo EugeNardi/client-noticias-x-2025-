@@ -2,16 +2,28 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import { formatISO9075 } from "date-fns";
-import { API_URL } from "../src/config";
+import { supabase } from "../src/supabaseClient";
 
 const PostPage = () => {
   const [postInfo, setPostInfo] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`${API_URL}/post/${id}`)
-      .then((response) => response.json())
-      .then((postInfo) => setPostInfo(postInfo));
+    const fetchPost = async () => {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (error) {
+        console.error('Error al cargar noticia:', error);
+      } else {
+        setPostInfo(data);
+      }
+    };
+    
+    fetchPost();
   }, [id]);
 
   useEffect(() => {

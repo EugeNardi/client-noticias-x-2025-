@@ -1,17 +1,28 @@
 import { useEffect, useState } from "react";
 import Post from "../components/Post";
 import Footer from "../components/Footer";
-import { API_URL } from "../src/config";
+import { supabase } from "../src/supabaseClient";
 
 const Index = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/post`)
-      .then((response) => response.json())
-      .then((posts) => {
-        setPosts(posts.slice(0, 10));
-      });
+    // Llamada directa a Supabase
+    const fetchPosts = async () => {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10);
+      
+      if (error) {
+        console.error('Error al cargar noticias:', error);
+      } else {
+        setPosts(data || []);
+      }
+    };
+    
+    fetchPosts();
   }, []);
 
   useEffect(() => {
