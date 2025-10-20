@@ -1,16 +1,4 @@
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api"
-  to = "/.netlify/functions/api"
-  status = 200
-  force = true
-
-[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
@@ -18,15 +6,6 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  functions = "netlify/functions"
-
-[build.environment]
-  # URL de la API - ahora usa Netlify Functions
-  VITE_API_URL = "/api"
-
-[functions]
-  # Configuración de las funciones
-  node_bundler = "esbuild"
 
 # Optimización de cache para reducir ancho de banda
 [[headers]]
