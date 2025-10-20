@@ -1,0 +1,159 @@
+═══════════════════════════════════════════════════════════════════
+  🚀 PASOS RÁPIDOS - DESPLIEGUE FULLSTACK
+═══════════════════════════════════════════════════════════════════
+
+✨ NUEVO: Frontend y Backend ahora están JUNTOS en un solo proyecto!
+
+═══════════════════════════════════════════════════════════════════
+  PASO 1: CREAR BUCKET EN SUPABASE (2 minutos)
+═══════════════════════════════════════════════════════════════════
+
+1. Ve a: https://supabase.com/dashboard
+2. Selecciona tu proyecto
+3. Storage → New bucket
+4. Nombre: covers
+5. Public bucket: ✅ ACTIVADO
+6. Create bucket
+
+═══════════════════════════════════════════════════════════════════
+  PASO 2: CREAR TABLAS EN SUPABASE (3 minutos)
+═══════════════════════════════════════════════════════════════════
+
+1. SQL Editor → New query
+2. Pega este código:
+
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS posts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    summary TEXT,
+    content TEXT NOT NULL,
+    cover TEXT,
+    author VARCHAR(255) NOT NULL,
+    category VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_posts_created_at ON posts(created_at DESC);
+
+ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE posts DISABLE ROW LEVEL SECURITY;
+
+3. Run (Ctrl + Enter)
+
+═══════════════════════════════════════════════════════════════════
+  PASO 3: INSTALAR DEPENDENCIAS (2 minutos)
+═══════════════════════════════════════════════════════════════════
+
+cd c:\Users\sebas\OneDrive\Escritorio\Noticias-X-main\client
+npm install
+
+═══════════════════════════════════════════════════════════════════
+  PASO 4: CONFIGURAR VARIABLES EN NETLIFY (3 minutos)
+═══════════════════════════════════════════════════════════════════
+
+1. Ve a: https://app.netlify.com
+2. Selecciona tu sitio
+3. Site configuration → Environment variables
+4. Add variable (3 veces):
+
+   SUPABASE_URL
+   https://xtzwrzlwodswvuyoufgt.supabase.co
+
+   SUPABASE_ANON_KEY
+   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0endyemx3b2Rzd3Z1eW91Zmd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4OTM2MzIsImV4cCI6MjA3NjQ2OTYzMn0.VCMC9Y7qt6xAqc2kqm9l1zZbqDeNCPycxtc_argv6s8
+
+   JWT_SECRET
+   asdfe45we45w345wegw345werjktjwertkjasbfoafnqwojfbqwijfm13rboj12ren1oinoqwndipw
+
+═══════════════════════════════════════════════════════════════════
+  PASO 5: DESPLEGAR (2 minutos)
+═══════════════════════════════════════════════════════════════════
+
+Opción A - Deploy Manual:
+npm run build
+netlify deploy --prod
+
+Opción B - Con Git (Recomendado):
+git add .
+git commit -m "Fullstack con Netlify Functions"
+git push
+
+═══════════════════════════════════════════════════════════════════
+  PASO 6: VERIFICAR (1 minuto)
+═══════════════════════════════════════════════════════════════════
+
+1. Abre: https://noticias-x.netlify.app/api
+   Deberías ver: "API funcionando con Supabase en Netlify"
+
+2. Abre: https://noticias-x.netlify.app
+   Prueba registrarte y crear una noticia
+
+═══════════════════════════════════════════════════════════════════
+  ✅ VENTAJAS DE ESTA ARQUITECTURA
+═══════════════════════════════════════════════════════════════════
+
+✅ Un solo repositorio (antes eran 2)
+✅ Un solo deploy (antes eran 2)
+✅ Sin problemas de CORS (mismo dominio)
+✅ Funciona con noticias-x.com Y noticias-x.netlify.app
+✅ Más fácil de mantener
+✅ Completamente gratis
+
+═══════════════════════════════════════════════════════════════════
+  📁 ESTRUCTURA DEL PROYECTO
+═══════════════════════════════════════════════════════════════════
+
+client/
+├── netlify/functions/api.js  ← BACKEND (Express + Supabase)
+├── src/                      ← FRONTEND (React)
+├── netlify.toml             ← Configuración
+└── package.json             ← Dependencias (todo junto)
+
+═══════════════════════════════════════════════════════════════════
+  🌐 ENDPOINTS DE LA API
+═══════════════════════════════════════════════════════════════════
+
+Todos en el mismo dominio (sin CORS!):
+
+GET  /api              → Estado
+POST /api/register     → Registrar
+POST /api/login        → Login
+GET  /api/profile      → Perfil
+POST /api/logout       → Logout
+POST /api/post         → Crear noticia (con imagen)
+GET  /api/post         → Todas las noticias
+GET  /api/post/:id     → Noticia por ID
+
+═══════════════════════════════════════════════════════════════════
+  🎯 CHECKLIST
+═══════════════════════════════════════════════════════════════════
+
+[ ] Bucket 'covers' creado (público)
+[ ] Tablas creadas (users, posts)
+[ ] RLS deshabilitado
+[ ] npm install ejecutado
+[ ] Variables en Netlify configuradas
+[ ] Sitio desplegado
+[ ] /api responde correctamente
+[ ] Frontend funciona
+[ ] Registro/Login funciona
+[ ] Crear posts con imágenes funciona
+
+═══════════════════════════════════════════════════════════════════
+  ⏱️ TIEMPO TOTAL: ~15 minutos
+═══════════════════════════════════════════════════════════════════
+
+📖 Para más detalles: DESPLIEGUE_COMPLETO.md
+
+✨ Ahora todo está en un solo proyecto!
+   Un git push despliega frontend Y backend juntos.

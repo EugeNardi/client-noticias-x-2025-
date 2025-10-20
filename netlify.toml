@@ -1,4 +1,9 @@
 [[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
@@ -6,9 +11,15 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  functions = "netlify/functions"
 
 [build.environment]
-  VITE_API_URL = "https://back-blog-beta.vercel.app"
+  # URL de la API - ahora usa Netlify Functions
+  VITE_API_URL = "/.netlify/functions/api"
+
+[functions]
+  # Configuración de las funciones
+  node_bundler = "esbuild"
 
 # Optimización de cache para reducir ancho de banda
 [[headers]]
