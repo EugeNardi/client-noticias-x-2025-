@@ -857,3 +857,319 @@ select{
     font-size: 1rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* MEJORAS DE DISEÑO MODERNO Y RESPONSIVE CON ESPACIOS PARA ADSENSE */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+/* Contenedor principal mejorado */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 15px;
+}
+
+/* Grid de posts mejorado */
+div.post {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 25px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+div.post:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* Imágenes mejoradas */
+div.post .image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+div.post .image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+div.post .image img:hover {
+  transform: scale(1.05);
+}
+
+/* Textos mejorados */
+div.post .texts h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 10px 0 15px 0;
+  color: #222;
+  font-family: 'Poppins', sans-serif;
+}
+
+div.post .texts h2:hover {
+  color: #051770;
+}
+
+div.post .texts .summary {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 15px;
+  font-family: 'Roboto', sans-serif;
+}
+
+div.post .texts .info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+div.post .texts .class a {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #051770;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+div.post .texts .class a:hover {
+  background: #0a2a9e;
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* ESPACIOS PARA GOOGLE ADSENSE */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+/* Contenedor para anuncios superiores */
+.ad-container-top {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  text-align: center;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Contenedor para anuncios laterales */
+.ad-container-sidebar {
+  position: sticky;
+  top: 100px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  min-height: 600px;
+  margin-bottom: 20px;
+}
+
+/* Contenedor para anuncios entre posts */
+.ad-container-inline {
+  margin: 30px 0;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  text-align: center;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* RESPONSIVE MEJORADO PARA MÓVILES */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Posts en columna única */
+  div.post {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  /* Imagen ocupa todo el ancho */
+  div.post .image {
+    width: 100%;
+    height: 220px;
+  }
+
+  /* Textos ajustados */
+  div.post .texts h2 {
+    font-size: 1.2rem;
+    margin: 8px 0 10px 0;
+  }
+
+  div.post .texts .summary {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  div.post .texts .info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 0.8rem;
+  }
+
+  /* Anuncios responsive */
+  .ad-container-top,
+  .ad-container-inline {
+    min-height: 100px;
+    padding: 10px;
+  }
+
+  .ad-container-sidebar {
+    display: none; /* Ocultar sidebar en móvil */
+  }
+
+  /* Main más compacto */
+  main {
+    padding: 15px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Posts más compactos en móviles pequeños */
+  div.post {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+  }
+
+  /* Imagen más pequeña */
+  div.post .image {
+    height: 180px;
+  }
+
+  /* Títulos más pequeños */
+  div.post .texts h2 {
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+
+  div.post .texts .summary {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  div.post .texts .class a {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+  }
+
+  /* Header responsive */
+  header {
+    height: auto;
+    min-height: 60px;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+    padding: 5px 15px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* MEJORAS PARA TABLETS */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  div.post {
+    grid-template-columns: 250px 1fr;
+    gap: 20px;
+  }
+
+  div.post .image {
+    height: 180px;
+  }
+
+  div.post .texts h2 {
+    font-size: 1.25rem;
+  }
+
+  main {
+    max-width: 95%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* MEJORAS PARA PÁGINA DE DETALLE DE POST */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.post-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.post-page img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.post-page h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 20px;
+  color: #222;
+  font-family: 'Poppins', sans-serif;
+}
+
+.post-page .content {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #333;
+  font-family: 'Roboto', sans-serif;
+}
+
+.post-page .content p {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .post-page {
+    padding: 20px 15px;
+  }
+
+  .post-page h1 {
+    font-size: 1.6rem;
+  }
+
+  .post-page .content {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .post-page img {
+    max-height: 300px;
+    border-radius: 8px;
+  }
+}
